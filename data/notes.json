@@ -1,0 +1,16 @@
+[
+  {
+    "id": "kubernetes-commands",
+    "title": "Useful Kubernetes Commands",
+    "date": "2023-04-10",
+    "content": "# Useful Kubernetes Commands\n\nA collection of commands I frequently use when working with Kubernetes.\n\n## Viewing Resources\n\n```bash\n# Get all pods in the current namespace\nkubectl get pods\n\n# Get all pods in all namespaces\nkubectl get pods --all-namespaces\n\n# Get detailed information about a specific pod\nkubectl describe pod <pod-name>\n```\n\n## Logs and Debugging\n\n```bash\n# View logs for a pod\nkubectl logs <pod-name>\n\n# Stream logs for a pod\nkubectl logs -f <pod-name>\n\n# Execute a command in a container\nkubectl exec -it <pod-name> -- /bin/bash\n```\n\n## Deployment Management\n\n```bash\n# Scale a deployment\nkubectl scale deployment <deployment-name> --replicas=3\n\n# Rollout status\nkubectl rollout status deployment/<deployment-name>\n\n# Rollback to previous version\nkubectl rollout undo deployment/<deployment-name>\n```\n\nRemember to always check the context before running commands in production environments!",
+    "tags": ["kubernetes", "devops", "commands", "reference"]
+  },
+  {
+    "id": "aws-cli-cheatsheet",
+    "title": "AWS CLI Cheatsheet",
+    "date": "2023-05-22",
+    "content": "# AWS CLI Cheatsheet\n\nCommon AWS CLI commands I use for managing resources.\n\n## EC2\n\n```bash\n# List all EC2 instances\naws ec2 describe-instances\n\n# List EC2 instances with specific filters\naws ec2 describe-instances --filters \"Name=instance-type,Values=t2.micro\"\n\n# Start/stop instances\naws ec2 start-instances --instance-ids i-1234567890abcdef0\naws ec2 stop-instances --instance-ids i-1234567890abcdef0\n```\n\n## S3\n\n```bash\n# List all buckets\naws s3 ls\n\n# List contents of a bucket\naws s3 ls s3://my-bucket/\n\n# Copy file to S3\naws s3 cp myfile.txt s3://my-bucket/\n\n# Sync directory with S3\naws s3 sync my-directory s3://my-bucket/my-directory\n```\n\n## ECS\n\n```bash\n# List clusters\naws ecs list-clusters\n\n# List services in a cluster\naws ecs list-services --cluster my-cluster\n\n# Update service (e.g., to force deployment)\naws ecs update-service --cluster my-cluster --service my-service --force-new-deployment\n```\n\n## CloudFormation\n\n```bash\n# List stacks\naws cloudformation list-stacks\n\n# Create stack\naws cloudformation create-stack --stack-name my-stack --template-body file://template.yaml\n\n# Update stack\naws cloudformation update-stack --stack-name my-stack --template-body file://template.yaml\n```",
+    "tags": ["aws", "cli", "cloud", "reference"]
+  }
+]

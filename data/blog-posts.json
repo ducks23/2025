@@ -1,0 +1,171 @@
+[
+  {
+    "id": "getting-started-with-kubernetes",
+    "title": "Getting Started with Kubernetes",
+    "date": "2023-05-15",
+    "excerpt": "A beginner's guide to setting up your first Kubernetes cluster and deploying applications.",
+    "author": "Jesse Leonard",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": "Kubernetes has become the de facto standard for container orchestration. In this post, I'll walk you through setting up your first Kubernetes cluster and deploying a simple application."
+      },
+      {
+        "type": "heading",
+        "content": "What is Kubernetes?"
+      },
+      {
+        "type": "paragraph",
+        "content": "Kubernetes is an open-source platform designed to automate deploying, scaling, and operating application containers. It groups containers that make up an application into logical units for easy management and discovery."
+      },
+      {
+        "type": "heading",
+        "content": "Prerequisites"
+      },
+      {
+        "type": "list",
+        "items": [
+          "Docker installed on your machine",
+          "kubectl command-line tool",
+          "minikube for local development",
+          "Basic understanding of containerization"
+        ]
+      },
+      {
+        "type": "heading",
+        "content": "Setting Up Minikube"
+      },
+      {
+        "type": "paragraph",
+        "content": "Minikube is a tool that makes it easy to run Kubernetes locally. It runs a single-node Kubernetes cluster inside a VM on your laptop."
+      },
+      {
+        "type": "code",
+        "language": "bash",
+        "content": "# Install minikube\nbrew install minikube\n\n# Start minikube\nminikube start\n\n# Verify installation\nkubectl get nodes"
+      },
+      {
+        "type": "paragraph",
+        "content": "Once you have minikube running, you can deploy applications to it using kubectl."
+      },
+      {
+        "type": "heading",
+        "content": "Deploying Your First Application"
+      },
+      {
+        "type": "paragraph",
+        "content": "Let's deploy a simple web application to our Kubernetes cluster."
+      },
+      {
+        "type": "code",
+        "language": "yaml",
+        "content": "apiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: hello-app\nspec:\n  replicas: 3\n  selector:\n    matchLabels:\n      app: hello-app\n  template:\n    metadata:\n      labels:\n        app: hello-app\n    spec:\n      containers:\n      - name: hello-app\n        image: nginx:latest\n        ports:\n        - containerPort: 80"
+      },
+      {
+        "type": "paragraph",
+        "content": "Save this to a file named deployment.yaml and apply it with kubectl:"
+      },
+      {
+        "type": "code",
+        "language": "bash",
+        "content": "kubectl apply -f deployment.yaml"
+      },
+      {
+        "type": "paragraph",
+        "content": "This will create a deployment with three replicas of an nginx container. You can verify the deployment with:"
+      },
+      {
+        "type": "code",
+        "language": "bash",
+        "content": "kubectl get deployments\nkubectl get pods"
+      },
+      {
+        "type": "heading",
+        "content": "Conclusion"
+      },
+      {
+        "type": "paragraph",
+        "content": "You've now set up a local Kubernetes cluster and deployed your first application. This is just the beginning of your Kubernetes journey. In future posts, we'll explore more advanced topics like services, ingress, and persistent storage."
+      }
+    ],
+    "tags": ["kubernetes", "devops", "containers", "cloud"]
+  },
+  {
+    "id": "building-scalable-apis-with-django-rest-framework",
+    "title": "Building Scalable APIs with Django REST Framework",
+    "date": "2023-07-22",
+    "excerpt": "Learn how to build robust and scalable APIs using Django REST Framework with best practices for authentication, pagination, and performance.",
+    "author": "Jesse Leonard",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": "Django REST Framework (DRF) is a powerful toolkit for building Web APIs in Django. In this post, I'll share some best practices for building scalable APIs with DRF based on my experience at Vectra AI."
+      },
+      {
+        "type": "heading",
+        "content": "Why Django REST Framework?"
+      },
+      {
+        "type": "paragraph",
+        "content": "Django REST Framework extends Django's powerful ORM and adds features specifically designed for building APIs, including serialization, authentication, viewsets, and more."
+      },
+      {
+        "type": "heading",
+        "content": "Project Structure"
+      },
+      {
+        "type": "paragraph",
+        "content": "A well-organized project structure is crucial for maintainability. Here's a structure I've found effective for large-scale API projects:"
+      },
+      {
+        "type": "code",
+        "language": "text",
+        "content": "my_api/\n  ├── apps/\n  │   ├── users/\n  │   │   ├── models.py\n  │   │   ├── serializers.py\n  │   │   ├── views.py\n  │   │   └── urls.py\n  │   ├── products/\n  │   │   ├── models.py\n  │   │   ├── serializers.py\n  │   │   ├── views.py\n  │   │   └── urls.py\n  ├── core/\n  │   ├── settings/\n  │   │   ├── base.py\n  │   │   ├── development.py\n  │   │   └── production.py\n  │   ├── urls.py\n  │   └── wsgi.py\n  └── utils/\n      ├── permissions.py\n      └── pagination.py"
+      },
+      {
+        "type": "heading",
+        "content": "Authentication with AWS Cognito"
+      },
+      {
+        "type": "paragraph",
+        "content": "At Vectra AI, we integrated DRF with AWS Cognito for authentication. Here's a simplified example of a custom authentication class:"
+      },
+      {
+        "type": "code",
+        "language": "python",
+        "content": "from rest_framework import authentication\nfrom rest_framework import exceptions\nimport boto3\n\nclass CognitoAuthentication(authentication.BaseAuthentication):\n    def authenticate(self, request):\n        token = request.META.get('HTTP_AUTHORIZATION', '')\n        if not token:\n            return None\n            \n        try:\n            # Verify token with Cognito\n            client = boto3.client('cognito-idp')\n            response = client.get_user(AccessToken=token)\n            \n            # Get or create user\n            user, created = User.objects.get_or_create(\n                username=response['Username']\n            )\n            \n            return (user, token)\n        except Exception as e:\n            raise exceptions.AuthenticationFailed('Invalid token')"
+      },
+      {
+        "type": "heading",
+        "content": "Optimizing Performance"
+      },
+      {
+        "type": "paragraph",
+        "content": "As your API grows, performance becomes critical. Here are some techniques we used to optimize our Django REST Framework APIs:"
+      },
+      {
+        "type": "list",
+        "items": [
+          "Use select_related() and prefetch_related() to reduce database queries",
+          "Implement caching for frequently accessed data",
+          "Use pagination to limit the amount of data returned",
+          "Consider using Django REST Framework's throttling for rate limiting"
+        ]
+      },
+      {
+        "type": "code",
+        "language": "python",
+        "content": "class ProductViewSet(viewsets.ModelViewSet):\n    queryset = Product.objects.select_related('category').prefetch_related('tags')\n    serializer_class = ProductSerializer\n    pagination_class = StandardResultsSetPagination"
+      },
+      {
+        "type": "heading",
+        "content": "Conclusion"
+      },
+      {
+        "type": "paragraph",
+        "content": "Django REST Framework is a powerful tool for building scalable APIs. By following these best practices, you can create robust, maintainable, and performant APIs that can grow with your application."
+      }
+    ],
+    "tags": ["django", "python", "api", "rest"]
+  }
+]
